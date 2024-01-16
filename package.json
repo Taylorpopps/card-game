@@ -1,0 +1,30 @@
+{
+  "name": "vite-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . -c .eslintrc.js --fix --ext .ts,.js,.vue,.tsx,.jsx"
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.5.0",
+    "@vueuse/math": "^10.5.0",
+    "axios": "^1.5.1",
+    "jwt-decode": "^3.1.2",
+    "pinia": "^2.1.7",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "eslint": "^8.51.0",
+    "eslint-plugin-auto-import": "^0.1.1",
+    "sass": "^1.69.0",
+    "unplugin-auto-import": "^0.15.3",
+    "vite": "^4.4.5",
+    "vite-plugin-vuetify": "1.0.2"
+  }
+}
