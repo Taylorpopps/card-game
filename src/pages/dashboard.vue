@@ -9,37 +9,10 @@ const session = ref(false);
 const currentCard = ref(false);
 const guessIsHigher = ref(true);
 const score = ref(0);
-const gameOver = ref(false)
+const gameOver = ref(false);
 const leaderBoard = ref(false);
-const theme = useTheme()
-
-
-//Todo this needs to be deleted after api's work
-const otherPlayersScores = [
-  { 
-    username: "taylor", score: 5, 
-  },
-  {
-    username: "sam", score: 5, 
-  }, 
-  {
-    username: "tom", score: 5, 
-  },
-  {
-    username: "jack", score: 5, 
-  }
-]
-
-//TODO needs to be deleted after api's work
-const cardRange = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-
-
-//TODO needs to be deleted after api's work
-const pickRandomCard = () => {
-  const randomIndex = Math.floor(Math.random() * cardRange.length);
-  
-  return cardRange[randomIndex];
-};
+const theme = useTheme();
+const otherPlayersScores = ref([]);
 
 const higherString = computed(() => {
   if (guessIsHigher.value) {
@@ -49,7 +22,7 @@ const higherString = computed(() => {
   }
 });
 
-const start = () => {
+const start = async () => {
   if (
     !username.value
   ) {
@@ -61,84 +34,45 @@ const start = () => {
     username: username.value
   }
 
-  // try {
-  //   let newSession = startGame(body);
-  //TODO need to delete line 44 after apis work
-    let newSession = {"sessionUuid" : "231231-12312312-123123123", "currentCard" : pickRandomCard()};
-
-
-  session.value = newSession.sessionUuid;
-  currentCard.value = newSession.currentCard;
-  
-  // } catch (err) {
-  //   alert('Could not start game');
-  // }
-
-};
-
-
-const isLower = (card1, card2) => {
-  const index1 = cardRange.indexOf(card1);
-  const index2 = cardRange.indexOf(card2);
-
-
-  console.log(card1);
-  console.log(card2)
-
-  if (index1 < index2) {  
-    return true;
-  } 
-  
-  return false;
-};
-
-const fetchOtherScores = () => {
   try {
-    // let response = scores();
-    // otherPlayersScores.value = response;
-    leaderBoard.value=true;
+    let newSession = await startGame(body);
 
+    session.value = newSession.sessionUuid;
+    currentCard.value = newSession.currentCard;
+  
+  } catch (err) {
+    alert('Could not start game');
+  }
+
+};
+
+const fetchOtherScores = async () => {
+  try {
+    let response = await scores();
+    otherPlayersScores.value = response.scores;
+    leaderBoard.value=true;
   } catch (err) {
     alert("Could not get leaderboard")
   }
-
-
-
-
-
 }
 
-const guessNextCard = () => {
-  let body = { guess: higherString.value, session: session.value};
+const guessNextCard = async () => {
+  let body = { higher: guessIsHigher.value, session: session.value};
 
   
-
-
   try {
-    // let response = guess(body)
-    // let status = response.status;
-    // let drawnCard = response.drawnCard;
-    // let score = response.score;
+    let response = await guess(body)
+    let drawnCard = response.currentCard;    
+    currentCard.value = drawnCard;
+    score.value = response.score;
 
-    let drawnCard = pickRandomCard();
-
-    console.log(isLower(drawnCard, currentCard.value ))
-
-    //THIS NEEDS TO GO AWAY AFTER API, because logic will be handled in the backend
-    if (isLower(drawnCard, currentCard.value ) == !guessIsHigher.value ) {
-      score.value =  score.value +1;
-      currentCard.value = drawnCard;
-    } else {
-      //Game over]
+    if (response.gameOver === true) {
       gameOver.value = true;
-      fetchOtherScores();
+      await fetchOtherScores();
     }
-    
-    if (score.value === 5 ) {
-      gameOver.value = true;
-      fetchOtherScores();
-    }
+
   } catch (err) {
+    console.log(err)
     alert('Could not guess the card');
   }
 };

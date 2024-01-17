@@ -13,7 +13,9 @@ export default defineConfig({
   ],
   define: { 'process.env': {
     "VUE_APP_ENVIRONMENT": "production",
-    "VUE_APP_API_URL": "http://127.0.0.1:8000/"
+    "VUE_APP_API_URL": "https://preview.wem.io/51968/webservices/api/",
+    "VUE_USER": "Admin",
+    "VUE_PASSWORD": "test1234"
   } },
   resolve: {
     alias: {

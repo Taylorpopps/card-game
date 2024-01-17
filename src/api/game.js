@@ -13,6 +13,6 @@ export async function guess(body) {
 
 
 export async function scores() {
-    const response = await axiosInstance.get("scores");
+    const response = await axiosInstance.post("scores", {});
     return response.data;
 }
