@@ -104,6 +104,9 @@ function toggleTheme () {
                   <br/>
                   <v-btn @click="start" class="bg-primary">Start</v-btn>
                 </div>
+
+
+
                 <div v-if="session && !gameOver">
                     <h2>Score</h2>
                     <h3>{{ score }}</h3>
@@ -127,6 +130,9 @@ function toggleTheme () {
                     <br/>
                     <v-btn @click="guessNextCard" class="bg-primary">Guess</v-btn>
                 </div>
+
+
+                
                 <div v-if="gameOver">
                   <h1>Awww... Game over!</h1>
                   <h2>Your score was</h2>

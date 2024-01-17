@@ -5,12 +5,10 @@ export async function startGame(body) {
     return response.data;
 }
 
-
 export async function guess(body) {
     const response = await axiosInstance.post("guess", body);
     return response.data;
 }
-
 
 export async function scores() {
     const response = await axiosInstance.post("scores", {});
