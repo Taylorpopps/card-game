@@ -38,7 +38,23 @@ const start = async () => {
     let newSession = await startGame(body);
 
     session.value = newSession.sessionUuid;
-    currentCard.value = newSession.currentCard;
+    let cardValue = newSession.currentCard;
+
+    if (cardValue == 11) {
+      cardValue = "J";
+    } 
+    if (cardValue == 12) {
+      cardValue = "Q";
+    } 
+    if (cardValue == 13) {
+      cardValue = "K";
+    } 
+    if (cardValue == 14) {
+      cardValue = "A";
+    } 
+
+
+    currentCard.value = cardValue;
   
   } catch (err) {
     alert('Could not start game');
@@ -49,7 +65,7 @@ const start = async () => {
 const fetchOtherScores = async () => {
   try {
     let response = await scores();
-    otherPlayersScores.value = response.scores;
+    otherPlayersScores.value = response.scores.sort((a, b) => b.score - a.score);
     leaderBoard.value=true;
   } catch (err) {
     alert("Could not get leaderboard")
@@ -57,13 +73,29 @@ const fetchOtherScores = async () => {
 }
 
 const guessNextCard = async () => {
-  let body = { higher: guessIsHigher.value, session: session.value};
+  let body = { higher: guessIsHigher.value, sessionUuid: session.value};
 
   
   try {
     let response = await guess(body)
-    let drawnCard = response.currentCard;    
-    currentCard.value = drawnCard;
+    let drawnCard = response.currentCard2;  
+    let cardValue = drawnCard;
+
+    if (cardValue == 11) {
+      cardValue = "J";
+    } 
+    if (cardValue == 12) {
+      cardValue = "Q";
+    } 
+    if (cardValue == 13) {
+      cardValue = "K";
+    } 
+    if (cardValue == 14) {
+      cardValue = "A";
+    } 
+
+
+    currentCard.value = cardValue;
     score.value = response.score;
 
     if (response.gameOver === true) {
@@ -91,7 +123,7 @@ function toggleTheme () {
       <v-card elevation="4" style="margin-top: 100px; margin-left: 100px; margin-right: 100px; padding: 50px; text-align: center;">
         <v-btn @click="toggleTheme" icon variant="text"  class="custom-hover-primary ml-0 ml-md-5 text-muted">
           <v-icon ize="x-large">mdi-weather-night</v-icon>
-      </v-btn>
+        </v-btn>
         
         <v-card-item>
             <div st>
@@ -114,7 +146,7 @@ function toggleTheme () {
 
                     <h2>Current card</h2>
                     <br/>
-                    <v-card style="margin-left: auto; margin-right: auto;width: 80px; height: 80px">
+                    <v-card style="background-color: rgb(162 169 244); margin-left: auto; margin-right: auto;width: 80px; height: 80px">
                         <h1>{{ currentCard }}</h1>
                     </v-card>
 
@@ -132,7 +164,7 @@ function toggleTheme () {
                 </div>
 
 
-                
+
                 <div v-if="gameOver">
                   <h1>Awww... Game over!</h1>
                   <h2>Your score was</h2>
